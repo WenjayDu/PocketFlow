@@ -50,10 +50,8 @@ tf.app.flags.DEFINE_float('ws_mask_update_step', 500, 'WS: step size for updatin
 
 def calc_prune_ratio(vars_list):
   """Calculate the overall pruning ratio for the given list of variables.
-
   Args:
   * vars_list: list of variables
-
   Returns:
   * prune_ratio: overall pruning ratio of the given list of variables
   """
@@ -69,7 +67,6 @@ class WeightSparseLearner(AbstractLearner):  # pylint: disable=too-many-instance
 
   def __init__(self, sm_writer, model_helper):
     """Constructor function.
-
     Args:
     * sm_writer: TensorFlow's summary writer
     * model_helper: model helper with definitions of model & dataset
@@ -144,7 +141,7 @@ class WeightSparseLearner(AbstractLearner):  # pylint: disable=too-many-instance
     """Restore a model from the latest checkpoint files and then evaluate it."""
 
     self.__restore_model(is_train=False)
-    nb_iters = int(np.ceil(float(FLAGS.nb_smpls_eval) / FLAGS.batch_size))
+    nb_iters = int(np.ceil(float(FLAGS.nb_smpls_eval) / FLAGS.batch_size_eval))
     eval_rslts = np.zeros((nb_iters, len(self.eval_op)))
     for idx_iter in range(nb_iters):
       eval_rslts[idx_iter] = self.sess_eval.run(self.eval_op)
@@ -259,7 +256,6 @@ class WeightSparseLearner(AbstractLearner):  # pylint: disable=too-many-instance
 
   def __build_masks(self):
     """build masks and corresponding operations for weight sparsification.
-
     Returns:
     * masks: list of masks for weight sparsification
     * prune_op: pruning operation
@@ -270,7 +266,7 @@ class WeightSparseLearner(AbstractLearner):  # pylint: disable=too-many-instance
       for var, var_name_n_prune_ratio in zip(self.maskable_vars, self.var_names_n_prune_ratios):
         # obtain the dynamic pruning ratio
         assert var.name == var_name_n_prune_ratio[0], \
-            'unmatched variable names: %s vs. %s' % (var.name, var_name_n_prune_ratio[0])
+          'unmatched variable names: %s vs. %s' % (var.name, var_name_n_prune_ratio[0])
         prune_ratio = self.__calc_prune_ratio_dyn(var_name_n_prune_ratio[1])
 
         # create a mask and non-masked backup for each variable
@@ -295,10 +291,8 @@ class WeightSparseLearner(AbstractLearner):  # pylint: disable=too-many-instance
 
   def __calc_prune_ratio_dyn(self, prune_ratio_fnl):
     """Calculate the dynamic pruning ratio.
-
     Args:
     * prune_ratio_fnl: final pruning ratio
-
     Returns:
     * prune_ratio_dyn: dynamic pruning ratio
     """
@@ -313,10 +307,8 @@ class WeightSparseLearner(AbstractLearner):  # pylint: disable=too-many-instance
 
   def __calc_grads_pruned(self, grads_origin):
     """Calculate the mask-pruned gradients.
-
     Args:
     * grads_origin: list of original gradients
-
     Returns:
     * grads_pruned: list of mask-pruned gradients
     """
@@ -339,7 +331,6 @@ class WeightSparseLearner(AbstractLearner):  # pylint: disable=too-many-instance
 
   def __restore_model(self, is_train):
     """Restore a model from the latest checkpoint files.
-
     Args:
     * is_train: whether to restore a model for training
     """
@@ -353,7 +344,6 @@ class WeightSparseLearner(AbstractLearner):  # pylint: disable=too-many-instance
 
   def __monitor_progress(self, summary, log_rslt, idx_iter, time_step):
     """Monitor the training progress.
-
     Args:
     * summary: summary protocol buffer
     * log_rslt: logging operations' results
