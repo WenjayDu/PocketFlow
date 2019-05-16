@@ -29,6 +29,7 @@ from learners.uniform_quantization_tf.learner import UniformQuantTFLearner
 from learners.nonuniform_quantization.learner import NonUniformQuantLearner
 
 FLAGS = tf.app.flags.FLAGS
+tf.flags.DEFINE_string('learner', 'full-prec', 'learner\'s name')
 
 def create_learner(sm_writer, model_helper):
   """Create the learner as specified by FLAGS.learner.
